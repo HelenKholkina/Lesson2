@@ -1,0 +1,25 @@
+1) Структура протокола определяет, что каждое HTTP-сообщение состоит из трёх частей, которые передаются в следующем порядке:
+The protocol structure specifies that each HTTP message consists of three parts, which are transmitted in the following order:
+
+Стартовая строка (Starting line) — определяет тип сообщения (defines the type of message);
+Заголовки (Headers) — характеризуют тело сообщения, параметры передачи и прочие сведения (characterize the message body, transfer parameters and other information);
+Тело сообщения (Message Body) — непосредственно данные сообщения. Обязательно должно отделяться от заголовков пустой строкой (is the message data itself. Must be separated from headers by an empty line).
+
+2) Cтартовая строка является обязательным элементом, так как указывает на тип запроса/ответа, заголовки и тело сообщения могут отсутствовать.   The start line is a required element, as it indicates the type of request / response, headers and message body may be missing.
+
+Стартовые строки различаются для запроса и ответа. Строка запроса выглядит так:
+The starting lines are different for request and response. The query string looks like this:
+
+Метод URI HTTP/Версия протокола (Method HTTP URI / Protocol Version)
+Пример запроса (Example request):
+
+GET /web-programming/index.html HTTP/1.1
+
+Стартовая строка ответа сервера имеет следующий формат:
+The start line of the server response has the following format:
+
+HTTP/Версия КодСостояния [Пояснение] (HTTP / Version StatusCode [Explanation])
+Например, на предыдущий наш запрос клиентом данной страницы сервер ответил строкой:
+For example, the server responded to our previous request by the client of this page with the line:
+
+HTTP/1.1 200 Ok
