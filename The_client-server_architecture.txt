@@ -1,0 +1,11 @@
+Архитектура «клиент-сервер» определяет общие принципы организации взаимодействия в сети, где имеются серверы, узлы-поставщики некоторых специфичных функций (сервисов) и клиенты (потребители этих функций).
+The client-server architecture defines the general principles of organizing interaction in a network where there are servers, nodes-providers of some specific functions (services) and clients (consumers of these functions).
+
+Клиент — та программа, с которой работает пользователь. Он знать не знает, это у него на компьютере программа целиком, или где-то за ней прячутся сервер с базой. Он работает в браузере или с desktop-приложением. И всё, что ему нужно знать — это «куда тут тыкать».
+The client is the program with which the user works. He does not know whether it is the entire program on his computer, or a server with a database is hidden somewhere behind it. It works in a browser or desktop application. And all he needs to know is "where to poke here."
+
+Сервер — компьютер, на котором хранится само приложение. Весь код, вся логика, все дополнительные материалы и справочники. Например, справочник адресов ФИАС — он тоже занимают место, как сами по себе, так и в памяти приложения.
+Server is the computer that hosts the application itself. All code, all logic, all additional materials and reference books. For example, a directory of FIAS addresses - it also takes up space, both by itself and in the application memory.
+
+БД (база данных) — хранилище данных. Тут вы можете легко поискать информацию + уверены в том, что она сохранится, даже если в приложении что-то сломается.
+DB (database) - data storage. Here you can easily search for information + you are sure that it will be saved even if something breaks in the application.
