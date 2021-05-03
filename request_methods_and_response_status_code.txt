@@ -1,0 +1,127 @@
+А) Метод HTTP (англ. HTTP Method) — параметр запроса, указывающий на основную операцию над ресурсом. Обычно метод представляет собой короткое английское слово, записанное заглавными буквами.
+HTTP Method is a request parameter indicating the main operation on a resource. Usually the method is a short English word written in capital letters.
+
+Основные методы
+Basic methods
+
+GET	
+Используется для запроса содержимого указанного ресурса. С помощью метода GET можно также начать какой-либо процесс. В этом случае в тело ответного сообщения следует включить информацию о ходе выполнения процесса. Клиент может передавать параметры выполнения запроса в URI целевого ресурса после символа «?»: GET /path/resource?param1=value1¶m2=value2 HTTP/1.1
+Used to query the contents of the specified resource. You can also start a process with the GET method. In this case, information about the progress of the process should be included in the body of the response message. The client can pass request execution parameters to the target resource URI after the "?" Character: GET / path / resource? Param1 = value1¶m2 = value2 HTTP / 1.1
+
+Согласно стандарту HTTP, запросы типа GET считаются идемпотентными — многократное повторение одного и того же запроса GET должно приводить к одинаковым результатам (при условии, что сам ресурс не изменился за время между запросами). Это позволяет кэшировать ответы на запросы GET.
+According to the HTTP standard, GET requests are considered idempotent - multiple repetitions of the same GET request should lead to the same results (provided that the resource itself has not changed during the time between requests). This allows you to cache responses to GET requests.
+
+Кроме обычного метода GET, различают ещё условный GET и частичный GET. Условные запросы GET содержат заголовки If-Modified-Since, If-Match, If-Range и подобные. Частичные GET содержат в запросе Range. Порядок выполнения подобных запросов определён стандартами отдельно.
+In addition to the usual GET method, there is also a conditional GET and a partial GET. Conditional GET requests contain If-Modified-Since, If-Match, If-Range, and the like. Partial GETs contain Range in the request. The order of execution of such requests is determined separately by the standards.
+
+HEAD	
+Аналогичен методу GET, за исключением того, что в ответе сервера отсутствует тело. Запрос HEAD обычно применяется для извлечения метаданных, проверки наличия ресурса (валидация URL) и чтобы узнать, не изменился ли он с момента последнего обращения.
+Similar to the GET method, except that the body is missing from the server response. The HEAD request is typically used to fetch metadata, check if a resource exists (URL validation), and to see if it has changed since the last time it was accessed.
+
+Заголовки ответа могут кэшироваться. При несовпадении метаданных ресурса с соответствующей информацией в кэше копия ресурса помечается как устаревшая.
+Response headers can be cached. If the metadata of a resource does not match the corresponding information in the cache, the copy of the resource is marked as obsolete.
+
+POST	
+Применяется для передачи пользовательских данных заданному ресурсу. Например, в блогах посетители обычно могут вводить свои комментарии к записям в HTML-форму, после чего они передаются серверу методом POST и он помещает их на страницу. При этом передаваемые данные (в примере с блогами — текст комментария) включаются в тело запроса. Аналогично с помощью метода POST обычно загружаются файлы.
+Used to transfer user data to a given resource. For example, on blogs, visitors can usually enter their comments on posts into an HTML form, after which they are POSTed to the server and placed on the page. In this case, the transmitted data (in the example with blogs - the text of the comment) is included in the body of the request. Likewise, files are usually uploaded using the POST method.
+
+В отличие от метода GET, метод POST не считается идемпотентным, то есть многократное повторение одних и тех же запросов POST может возвращать разные результаты (например, после каждой отправки комментария будет появляться одна копия этого комментария).
+Unlike the GET method, the POST method is not considered idempotent, that is, repeating the same POST requests multiple times may return different results (for example, one copy of this comment will appear after each comment is posted).
+
+При результатах выполнения 200 (Ok) и 204 (No Content) в тело ответа следует включить сообщение об итоге выполнения запроса. Если был создан ресурс, то серверу следует вернуть ответ 201 (Created) с указанием URI нового ресурса в заголовке Location.
+If execution results are 200 (Ok) and 204 (No Content), a message about the completion of the request should be included in the response body. If a resource was created, the server SHOULD return a 201 (Created) response with the URI of the new resource in the Location header.
+
+Сообщение ответа сервера на выполнение метода POST не кэшируется.
+The server response message for the POST method is not cached.
+
+PUT	
+Применяется для загрузки содержимого запроса на указанный в запросе URI. Если по заданному URI не существовало ресурса, то сервер создаёт его и возвращает статус 201 (Created). Если же был изменён ресурс, то сервер возвращает 200 (Ok) или 204 (No Content). Сервер не должен игнорировать некорректные заголовки Content-* передаваемые клиентом вместе с сообщением. Если какой-то из этих заголовков не может быть распознан или не допустим при текущих условиях, то необходимо вернуть код ошибки 501 (Not Implemented).
+It is used to download the content of the request to the URI specified in the request. If the resource did not exist at the specified URI, the server creates it and returns the 201 (Created) status. If the resource was changed, the server returns 200 (Ok) or 204 (No Content). The server MUST NOT ignore invalid Content- * headers sent by the client along with the message. If any of these headers cannot be recognized or are not valid under the current conditions, then a 501 (Not Implemented) error code must be returned.
+
+Фундаментальное различие методов POST и PUT заключается в понимании предназначений URI ресурсов. Метод POST предполагает, что по указанному URI будет производиться обработка передаваемого клиентом содержимого. Используя PUT, клиент предполагает, что загружаемое содержимое соответствуют находящемуся по данному URI ресурсу.
+The fundamental difference between the POST and PUT methods lies in understanding the purpose of the resource URIs. The POST method assumes that the content transmitted by the client will be processed at the specified URI. By using PUT, the client assumes that the content being loaded matches the resource at the given URI.
+
+Сообщения ответов сервера на метод PUT не кэшируются.
+Server response messages to the PUT method are not cached.
+
+DELETE	
+Удаляет указанный ресурс.
+Removes the specified resource.
+
+
+Б) Код состояния (status code)
+Код состояния информирует клиента о результатах выполнения запроса и определяет его дальнейшее поведение. Набор кодов состояния является стандартом, и все они описаны в соответствующих документах RFC.
+The status code informs the client about the results of the request and determines its further behavior. The set of status codes is a standard, and they are all described in the corresponding RFCs.
+
+Каждый код представляется целым трехзначным числом. Первая цифра указывает на класс состояния, последующие - порядковый номер состояния (рис 1.). За кодом ответа обычно следует краткое описание на английском языке.
+Each code is represented by a three-digit integer. The first digit indicates the class of the state, the subsequent ones - the ordinal number of the state (Fig. 1). The response code is usually followed by a short description in English.
+
+Введение новых кодов должно производиться только после согласования с IETF. Клиент может не знать все коды состояния, но он обязан отреагировать в соответствии с классом кода.
+The introduction of new codes should only be made after consultation with the IETF. The client may not know all the status codes, but it is the responsibility of the client to respond according to the class of the code.
+
+Основные коды состояния протокола HTTP
+
+1) 1xx Informational (Информационный)
+В этот класс выделены коды, информирующие о процессе передачи. В HTTP/1.0 сообщения с такими кодами должны игнорироваться. В HTTP/1.1 клиент должен быть готов принять этот класс сообщений как обычный ответ, но ничего отправлять серверу не нужно. Сами сообщения от сервера содержат только стартовую строку ответа и, если требуется, несколько специфичных для ответа полей заголовка. Прокси-сервера подобные сообщения должны отправлять дальше от сервера к клиенту.
+This class contains codes that inform about the transmission process. In HTTP / 1.0, messages with such codes should be ignored. In HTTP / 1.1, the client must be prepared to accept this message class as a normal response, but does not need to send anything to the server. The messages from the server themselves contain only the start line of the response and, if required, several response-specific header fields. Proxy servers should send such messages further from the server to the client.
+
+Примеры ответов сервера:
+
+100 Continue (Продолжать) - сервер удовлетворён начальными сведениями о запросе, клиент может продолжать пересылать заголовки. Появился в HTTP/1.1.   The server is satisfied with the initial details of the request, the client can continue to send headers. Introduced in HTTP / 1.1.
+101 Switching Protocols (Переключение протоколов) - сервер выполняет требование клиента и переключает протоколы в соответствии с указанием, данным в поле заголовка Upgrade. Сервер отправляет заголовок ответа Upgrade, указывая протокол, на который он переключился. Появился в HTTP/1.1.   The server fulfills the client's request and switches protocols as instructed in the Upgrade header field. The server sends an Upgrade response header indicating the protocol it switched to. Introduced in HTTP / 1.1.
+102 Processing (Идёт обработка) - запрос принят, но на его обработку понадобится длительное время. Используется сервером, чтобы клиент не разорвал соединение из-за превышения времени ожидания. Клиент при получении такого ответа должен сбросить таймер и дожидаться следующей команды в обычном режиме. Появился в WebDAV.   The request has been accepted, but it will take a long time to process. Used by the server to prevent the client from dropping the connection due to timeout. Upon receipt of such a response, the client must reset the timer and wait for the next command in the normal mode. Introduced in WebDAV.
+103 Early Hints (Ранние подсказки) — используется для раннего возврата части заголовков, когда заголовки полного ответа не могут быть быстро сформированы.   Used to return a portion of headers early when full response headers cannot be generated quickly.
+
+2) 2xx Success (Успешно)	
+Сообщения данного класса информируют о случаях успешного принятия и обработки запроса клиента. В зависимости от статуса сервер может ещё передать заголовки и тело сообщения.
+Messages of this class inform about cases of successful acceptance and processing of a client's request. Depending on the status, the server can also transmit the headers and body of the message.
+
+Примеры ответов сервера:
+
+200 OK (Успешно) - Если клиентом были запрошены какие-либо данные, то они находятся в заголовке и/или теле сообщения.  If the client has requested any data, then they are in the header and / or body of the message.
+201 Created (Создано) - в результате успешного выполнения запроса был создан новый ресурс.  A new resource has been created as a result of the successful execution of the request. 
+202 Accepted (Принято) - запрос был принят на обработку, но она не завершена.  The request has been accepted for processing, but it has not been completed.
+203 Non-Authoritative Information (Неавторитетная информация) - аналогично ответу 200, но в этом случае передаваемая информация была взята не из первичного источника (резервной копии, другого сервера и т. д.) и поэтому может быть неактуальной.  similar to answer 200, but in this case the information transmitted was not taken from the primary source (backup, another server, etc.) and therefore may not be up-to-date.
+204 No Content (Нет содержимого) - сервер успешно обработал запрос, но в ответе были переданы только заголовки без тела сообщения.  The server successfully processed the request, but only the headers without the message body were sent in the response.
+206 Partial Content (Частичное содержимое) - сервер удачно выполнил частичный GET-запрос, возвратив только часть сообщения.   The server successfully completed a partial GET request, returning only part of the message.
+
+3) 3xx Redirection (Перенаправление)	
+Коды статуса класса 3xx сообщают клиенту, что для успешного выполнения операции нужно произвести следующий запрос к другому URI. В большинстве случаев новый адрес указывается в поле Location заголовка. Клиент в этом случае должен, как правило, произвести автоматический переход (жарг. «редирект»).
+The 3xx class status codes tell the client to make the next request to a different URI to complete the operation successfully. In most cases, the new address is specified in the Location header field. In this case, the client should, as a rule, make an automatic transition (jargon "redirect").
+
+Обратите внимание, что при обращении к следующему ресурсу можно получить ответ из этого же класса кодов. Может получиться даже длинная цепочка из перенаправлений, которые, если будут производиться автоматически, создадут чрезмерную нагрузку на оборудование. Поэтому разработчики протокола HTTP настоятельно рекомендуют после второго подряд подобного ответа обязательно запрашивать подтверждение на перенаправление у пользователя. За этим следить обязан клиент, так как текущий сервер может перенаправить клиента на ресурс другого сервера. Клиент также должен предотвратить попадание в круговые перенаправления.
+Note that when accessing the following resource, you can get a response from the same code class. It can even result in a long chain of redirects, which, if done automatically, will create an excessive load on the equipment. Therefore, the developers of the HTTP protocol strongly recommend that after the second consecutive response of this kind, be sure to request confirmation of the redirect from the user. It is the responsibility of the client to monitor this, since the current server can redirect the client to a resource on another server. The client must also prevent it from getting caught in round-robin redirects
+
+Примеры ответов сервера:
+
+300 Multiple Choices (Множественный выбор) - по указанному URI существует несколько вариантов предоставления ресурса по типу MIME, по языку или по другим характеристикам.   There are several options for providing a resource based on the MIME type, language, or other characteristics at the specified URI.
+301 Moved Permanently (Перемещено навсегда) - запрошенный документ был окончательно перенесен на новый URI, указанный в поле Location заголовка.   The requested document has been permanently moved to the new URI specified in the Location header field.
+304 Not Modified (Не изменялось) - сервер возвращает такой код, если клиент запросил документ методом GET, использовал заголовок If-Modified-Since или If-None-Match и документ не изменился с указанного момента.    The server returns this code if the client GET request for the document, used the If-Modified-Since or If-None-Match header, and the document has not changed since that moment.
+305 Use Proxy (Используется прокси) — запрос к запрашиваемому ресурсу должен осуществляться через прокси-сервер, URI которого указан в поле Location заголовка.   The request for the requested resource must be made through the proxy server whose URI is specified in the Location header field.
+307 Temporary Redirect (Временное перенаправление) — запрашиваемый ресурс на короткое время доступен по другому URI, указанный в поле Location заголовка.   The requested resource is briefly available at a different URI specified in the Location header field.
+
+4xx Client Error (Ошибка клиента)	
+Класс кодов 4xx предназначен для указания ошибок со стороны клиента. При использовании всех методов, кроме HEAD, сервер должен вернуть в теле сообщения гипертекстовое пояснение для пользователя.
+The 4xx class of codes is intended to indicate client-side errors. When using all methods except HEAD, the server must return a hypertext explanation to the user in the body of the message.
+
+Примеры ответов сервера:
+
+401 Unauthorized (Неавторизован)
+402 Payment Required (Требуется оплата)
+403 Forbidden (Запрещено)
+404 Not Found (Не найдено)
+405 Method Not Allowed (Метод не поддерживается)
+406 Not Acceptable (Не приемлемо)
+407 Proxy Authentication Required (Требуется аутентификация прокси)
+
+5xx Server Error (Ошибка сервера)	
+Коды 5xx выделены под случаи неудачного выполнения операции по вине сервера. Для всех ситуаций, кроме использования метода HEAD, сервер должен включать в тело сообщения объяснение, которое клиент отобразит пользователю.
+5xx codes are allocated for cases of unsuccessful operation due to the fault of the server. For all situations other than using the HEAD method, the server must include an explanation in the message body that the client will display to the user.
+
+Примеры ответов сервера:
+
+500 Internal Server Error (Внутренняя ошибка сервера) - любая внутренняя ошибка сервера, которая не входит в рамки остальных ошибок класса.   Any internal server error that is not covered by the rest of the class errors.
+502 Bad Gateway (Плохой шлюз) - сервер, выступая в роли шлюза или прокси-сервера, получил недействительное ответное сообщение от вышестоящего сервера.   A server acting as a gateway or proxy received an invalid reply message from an upstream server.
+503 Service Unavailable (Сервис недоступен) - сервер временно не имеет возможности обрабатывать запросы по техническим причинам (обслуживание, перегрузка и прочее).   the server is temporarily unable to process requests for technical reasons (maintenance, overload, etc.).
+504 Gateway Timeout (Шлюз не отвечает) - сервер в роли шлюза или прокси-сервера не дождался ответа от вышестоящего сервера для завершения текущего запроса.   The server in the gateway or proxy role did not wait for a response from the upstream server to complete the current request.
+510 Not Extended (Нет расширения) — на сервере отсутствует расширение, которое желает использовать клиент. Сервер может дополнительно передать информацию о доступных ему расширениях.   The server does not have an extension that the client wants to use. The server can additionally transmit information about the extensions available to it.
